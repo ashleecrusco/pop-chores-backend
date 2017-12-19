@@ -2,14 +2,11 @@ class Api::V1::SessionsController < ApplicationController
   # skip_before_action :authorized, only: [:create]
 
   def show
-    jwt = JWT.decode(params[:token], "supersecretcode", 'HS256')
-    token = request.headers['Authorization']
-    byebug
-    user = User.find(jwt[0]["user_id"])
+    token = request.headers['token']
+    jwt = JWT.decode(token, "supersecretcode", 'HS256')
+    user = User.find(jwt[0]['user_id'])
     render json: {
-      id: user.id,
-      username: user.username,
-      user_info: user
+      user: user
     }
   end
 

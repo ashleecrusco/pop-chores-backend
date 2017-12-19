@@ -1,6 +1,7 @@
 class Api::V1::HouseholdsController < ApplicationController
   def index
-
+    households = Household.all
+    render json: households.to_json()
   end
 
   def new
@@ -14,5 +15,5 @@ class Api::V1::HouseholdsController < ApplicationController
   end
 
   def update
-  end 
+  end
 end

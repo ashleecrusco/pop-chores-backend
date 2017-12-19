@@ -7,9 +7,10 @@ Rails.application.routes.draw do
       resources :households
       resources :sessions
 
-      
+
       post '/auth' => 'sessions#create'
       get '/current_user' => 'sessions#show'
+      post '/current_user' => 'sessions#show'
 
     end
   end
