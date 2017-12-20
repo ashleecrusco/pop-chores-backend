@@ -5,9 +5,11 @@ class Api::V1::HouseholdsController < ApplicationController
   end
 
   def new
+    byebug
   end
 
   def create
+    byebug
   end
 
   def edit

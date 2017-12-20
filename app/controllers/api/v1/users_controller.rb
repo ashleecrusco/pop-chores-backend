@@ -10,6 +10,12 @@ class Api::V1::UsersController < ApplicationController
 
   def create
     user = User.new(user_params)
+    if params[:household_action] === "Join"
+      user.households << Household.find(params[:household_id])
+    else
+      household = Household.create(name: params[:household])
+      user.households << household
+    end
     if user.valid?
       user.save
       render json: user.to_json()
