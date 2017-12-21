@@ -1,7 +1,7 @@
 class Api::V1::UsersController < ApplicationController
   def index
    users = User.all
-   render json: users.to_json(include: [:households])
+   render json: users.to_json(include: [:households, :chores])
  end
 
   def new
@@ -18,7 +18,7 @@ class Api::V1::UsersController < ApplicationController
     end
     if user.valid?
       user.save
-      render json: user.to_json()
+      render json: user.to_json(include: [:households, :chores])
     else
       render json: {error: 'Invalid User Input', status: '400'}
     end

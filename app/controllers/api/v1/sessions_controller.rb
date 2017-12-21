@@ -5,9 +5,7 @@ class Api::V1::SessionsController < ApplicationController
     token = request.headers['token']
     jwt = JWT.decode(token, "supersecretcode", 'HS256')
     user = User.find(jwt[0]['user_id'])
-    render json: {
-      user: user
-    }
+    render json: user.to_json(include: [:households])
   end
 
   def create

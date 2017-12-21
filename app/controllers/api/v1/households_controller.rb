@@ -1,7 +1,7 @@
 class Api::V1::HouseholdsController < ApplicationController
   def index
     households = Household.all
-    render json: households.to_json()
+    render json: households.to_json(include: [:users, :chores])
   end
 
   def new
