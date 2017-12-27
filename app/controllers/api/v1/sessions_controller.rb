@@ -5,7 +5,7 @@ class Api::V1::SessionsController < ApplicationController
     token = request.headers['token']
     jwt = JWT.decode(token, "supersecretcode", 'HS256')
     user = User.find(jwt[0]['user_id'])
-    render json: user.to_json(include: [:households])
+    render json: user.to_json(include: [:households, :chores, :user_chores])
   end
 
   def create
@@ -13,7 +13,7 @@ class Api::V1::SessionsController < ApplicationController
     if user && user.authenticate(params[:password])
       payload = {user_id: user.id}
       token = issue_token(payload)
-      render json: {token: token, user: user}
+      render json: {token: token, user: user, chores: user.chores, households: user.households}
     else
       render json: {error: "ahhhhhhhh!"}
     end
