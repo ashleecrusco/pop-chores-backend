@@ -15,6 +15,7 @@ class Api::V1::ChoresController < ApplicationController
   end
 
   def create
+    byebug
     chore = Chore.new(chore_params)
     if chore.valid?
       chore.save
@@ -35,7 +36,7 @@ class Api::V1::ChoresController < ApplicationController
   private
 
   def chore_params
-    params.require(:chore).permit(:title, :point_value, :description, :image_url, :household_id, :available)
+    params.require(:chore).permit(:title, :point_value, :description, :image_url, :household_id, :available, :chore_owner, :personal_chore)
   end
 
   def chore_update_params
