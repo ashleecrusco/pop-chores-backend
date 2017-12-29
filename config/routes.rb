@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       post '/current_user' => 'sessions#show'
       post '/chores/:id' => 'chores#update'
 
+      get '/userchores/:id' => 'user_chores#index'
+
     end
   end
 end

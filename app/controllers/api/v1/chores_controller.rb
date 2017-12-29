@@ -1,7 +1,8 @@
 class Api::V1::ChoresController < ApplicationController
   def index
     chores = Chore.all
-    render json: chores.to_json(include: [:household, :users,  :user_chores])
+    render json: {chores: chores}
+
   end
 
   def new
@@ -9,18 +10,15 @@ class Api::V1::ChoresController < ApplicationController
   end
 
   def show
-    household = Household.find(params[:id])
-    chores = household.chores
-    render json: chores.to_json(include: [:household, :users,  :user_chores])
+    chore = Chore.find(params[:id])
+    render json: chore.to_json(include: [:user_chores])
   end
 
   def create
-    byebug
     chore = Chore.new(chore_params)
     if chore.valid?
       chore.save
-      chores = Household.find_by(id: chore.household_id).chores
-      render json: chores.to_json(include: [:household, :users, :user_chores])
+      render json: chore.to_json()
     else
       render json: {error: 'Invalid Input', status: '400'}
     end
