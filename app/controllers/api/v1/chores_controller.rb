@@ -2,7 +2,6 @@ class Api::V1::ChoresController < ApplicationController
   def index
     chores = Chore.all
     render json: {chores: chores}
-
   end
 
   def new
@@ -25,10 +24,31 @@ class Api::V1::ChoresController < ApplicationController
   end
 
   def update
-    chore = Chore.find(chore_update_params[:id])
-    user = User.find(chore_update_params[:user_id])
-    user.chores
-    byebug
+
+    # if complete
+    if chore_update_params[:type] === "complete"
+      chore = Chore.find(chore_update_params[:chore_id])
+      user = User.find(chore_update_params[:user_id])
+
+      user_chore = UserChore.find(chore_update_params[:id])
+      # mark user_chore as complete with date
+      user_chore.update_attributes(complete: true, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, date_completed: Time.now)
+      # change chore to available
+      chore.update_attributes(available: true)
+      # add points to user points
+      user.points += chore.point_value
+    end
+    # if add
+    if chore_update_params[:type] === "add"
+      chore = Chore.find(chore_update_params[:id])
+      user = User.find(chore_update_params[:user_id])
+
+      # change chore to unavailable
+      chore.update_attributes(available: false)
+      # add chore to user_chores
+      user.chores << chore
+    end
+    render json: {user: user, households: user.households, chores: user.households[0].chores, user_chores: user.user_chores}
   end
 
   private
@@ -38,6 +58,6 @@ class Api::V1::ChoresController < ApplicationController
   end
 
   def chore_update_params
-    params.permit(:id, :title, :point_value, :description, :household_id, :available, :image_url, :user_id)
+    params.permit(:id, :title, :point_value, :available, :image_url, :user_id, :type, :complete, :chore_id, :date_completed)
   end
 end
