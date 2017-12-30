@@ -36,13 +36,14 @@ class Api::V1::ChoresController < ApplicationController
       # mark user_chore as complete with date
       t = Time.now
       time = t.strftime("%m/%d/%y at %I:%M%p")
-      byebug
-      user_chore.update_attributes(complete: true, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, date_completed: time)
+      
+      user_chore.update_attributes(complete: true, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, date_completed: time, completed_at: Time.now)
       # change chore to available
       chore.update_attributes(available: true)
       # add points to user points
       user.update_attributes(points: user.points += chore.point_value)
     end
+
     # if add
     if chore_update_params[:type] === "add"
       chore = Chore.find(chore_update_params[:id])
@@ -53,6 +54,13 @@ class Api::V1::ChoresController < ApplicationController
       # add chore to user_chores
       user.chores << chore
       user.user_chores.last.update_attributes(personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url)
+    end
+
+    # if like
+    if chore_update_params[:type] === "like"
+      user = User.find(chore_update_params[:user_id])
+      user_chore = UserChore.find(chore_update_params[:id])
+      user_chore.update_attributes(likes: user_chore.likes += 1)
     end
     render json: {user: user, households: user.households, chores: user.households[0].chores, user_chores: user.user_chores, all_activity: UserChore.all}
   end
