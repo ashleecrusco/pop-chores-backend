@@ -14,10 +14,12 @@ class Api::V1::ChoresController < ApplicationController
   end
 
   def create
+    byebug
     chore = Chore.new(chore_params)
+    user = User.find()
     if chore.valid?
       chore.save
-      render json: chore.to_json()
+      render json: {user: user, households: user.households, chores: user.households[0].chores, user_chores: user.user_chores, all_activity: UserChore.all}
     else
       render json: {error: 'Invalid Input', status: '400'}
     end
@@ -32,11 +34,14 @@ class Api::V1::ChoresController < ApplicationController
 
       user_chore = UserChore.find(chore_update_params[:id])
       # mark user_chore as complete with date
-      user_chore.update_attributes(complete: true, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, date_completed: Time.now)
+      t = Time.now
+      time = t.strftime("%m/%d/%y at %I:%M%p")
+      byebug
+      user_chore.update_attributes(complete: true, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, date_completed: time)
       # change chore to available
       chore.update_attributes(available: true)
       # add points to user points
-      user.points += chore.point_value
+      user.update_attributes(points: user.points += chore.point_value)
     end
     # if add
     if chore_update_params[:type] === "add"
@@ -47,8 +52,9 @@ class Api::V1::ChoresController < ApplicationController
       chore.update_attributes(available: false)
       # add chore to user_chores
       user.chores << chore
+      user.user_chores.last.update_attributes(personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url)
     end
-    render json: {user: user, households: user.households, chores: user.households[0].chores, user_chores: user.user_chores}
+    render json: {user: user, households: user.households, chores: user.households[0].chores, user_chores: user.user_chores, all_activity: UserChore.all}
   end
 
   private

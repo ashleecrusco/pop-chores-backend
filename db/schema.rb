@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171229152933) do
+ActiveRecord::Schema.define(version: 20171230194527) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 20171229152933) do
     t.integer "points"
     t.string "title"
     t.string "image_url"
-    t.datetime "date_completed"
+    t.string "date_completed"
   end
 
   create_table "user_households", force: :cascade do |t|
