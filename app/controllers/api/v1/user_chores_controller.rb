@@ -1,6 +1,6 @@
 class Api::V1::UserChoresController < ApplicationController
   def index
-    user_chores = UserChore.where(user_id: params[:id])
+    user_chores = UserChore.all
     render json: user_chores.to_json()
   end
 

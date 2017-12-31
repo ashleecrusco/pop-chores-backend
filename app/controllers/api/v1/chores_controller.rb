@@ -14,9 +14,8 @@ class Api::V1::ChoresController < ApplicationController
   end
 
   def create
-    byebug
     chore = Chore.new(chore_params)
-    user = User.find()
+    user = User.find(params[:user_id])
     if chore.valid?
       chore.save
       render json: {user: user, households: user.households, chores: user.households[0].chores, user_chores: user.user_chores, all_activity: UserChore.all}
@@ -36,7 +35,6 @@ class Api::V1::ChoresController < ApplicationController
       # mark user_chore as complete with date
       t = Time.now
       time = t.strftime("%m/%d/%y at %I:%M%p")
-      
       user_chore.update_attributes(complete: true, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, date_completed: time, completed_at: Time.now)
       # change chore to available
       chore.update_attributes(available: true)
@@ -53,7 +51,7 @@ class Api::V1::ChoresController < ApplicationController
       chore.update_attributes(available: false)
       # add chore to user_chores
       user.chores << chore
-      user.user_chores.last.update_attributes(personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url)
+      user.user_chores.last.update_attributes(complete: false, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url)
     end
 
     # if like
