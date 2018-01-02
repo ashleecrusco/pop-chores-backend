@@ -42,12 +42,13 @@ class Api::V1::UsersController < ApplicationController
     end
 
     if user_params[:type] === "delete"
+      user.chores.where(available: false).update_all(available: true)
       user.delete
     end
   end
 
   private
-
+  
   def user_params
     params.permit(:first_name, :last_name, :username, :password, :status, :type, :id)
   end
