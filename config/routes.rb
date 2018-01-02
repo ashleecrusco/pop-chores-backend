@@ -14,6 +14,8 @@ Rails.application.routes.draw do
       post '/chores/:id' => 'chores#update'
 
       get '/userchores/:id' => 'user_chores#index'
+      get '/users/:id' => 'users#show'
+      post '/users/:id' => 'users#update'
 
     end
   end

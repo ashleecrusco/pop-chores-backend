@@ -44,8 +44,10 @@ class Api::V1::ChoresController < ApplicationController
 
     if chore_update_params[:type] === "edit"
       user = User.find(chore_update_params[:user_id])
-      chore = Chore.find(chore_update_params[:id])
-      chore.update_attributes(title: chore_update_params[:title], description: chore_update_params[:description], image_url: chore_update_params[:image_url], point_value: chore_update_params[:point_value])
+      chore = Chore.find(chore_params[:id])
+      user_chore = UserChore.find(chore_update_params[:id])
+      chore.update_attributes(title: chore_params[:title], description: chore_params[:description], image_url: chore_params[:image_url], point_value: chore_params[:point_value])
+      user_chore.update_attributes(title: chore_update_params[:title], image_url: chore_update_params[:image_url], points: chore_update_params[:point_value])
     end
 
     if chore_update_params[:type] === "delete"
@@ -78,10 +80,10 @@ class Api::V1::ChoresController < ApplicationController
   private
 
   def chore_params
-    params.require(:chore).permit(:title, :point_value, :description, :image_url, :household_id, :available, :chore_owner, :personal_chore)
+    params.require(:chore).permit(:id, :title, :point_value, :description, :image_url, :household_id, :available, :chore_owner, :personal_chore)
   end
 
   def chore_update_params
-    params.permit(:id, :title, :point_value, :available, :image_url, :user_id, :type, :complete, :chore_id, :date_completed)
+    params.permit(:id, :title, :point_value, :available, :image_url, :user_id, :type, :complete, :chore_id, :date_completed, :description)
   end
 end

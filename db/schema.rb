@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171231132301) do
+ActiveRecord::Schema.define(version: 20180102145754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -66,6 +66,7 @@ ActiveRecord::Schema.define(version: 20171231132301) do
     t.datetime "updated_at", null: false
     t.integer "points", default: 0
     t.string "profile_pic", default: "https://i.pinimg.com/736x/3d/d9/b8/3dd9b8d4404859689ec68bffc46f158d--facebook-profile-profile-pictures.jpg"
+    t.string "status", default: "Ready to Clean!"
   end
 
 end
