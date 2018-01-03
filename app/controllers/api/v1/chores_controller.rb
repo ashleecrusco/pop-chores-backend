@@ -62,7 +62,7 @@ class Api::V1::ChoresController < ApplicationController
       user = User.find(chore_update_params[:user_id])
 
       # change chore to unavailable
-      chore.update_attributes(available: false)
+      chore.update_attributes(available: false, currently_assigned: user.username)
       # add chore to user_chores
       user.chores << chore
       user.user_chores.last.update_attributes(complete: false, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, claimed_at: Time.now)
