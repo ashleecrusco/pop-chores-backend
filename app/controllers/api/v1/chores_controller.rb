@@ -37,9 +37,10 @@ class Api::V1::ChoresController < ApplicationController
       time = t.strftime("%m/%d/%y at %I:%M%p")
       user_chore.update_attributes(complete: true, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, date_completed: time, completed_at: Time.now)
       # change chore to available
-      chore.update_attributes(available: true)
+      chore.update_attributes(available: true, currently_assigned: "")
       # add points to user points
-      user.update_attributes(points: user.points += chore.point_value)
+      user.update_attributes(points: user.points += chore.point_value, complete_count: user.complete_count += 1)
+
     end
 
     if chore_update_params[:type] === "edit"
@@ -57,12 +58,12 @@ class Api::V1::ChoresController < ApplicationController
     end
 
     # if add
+
     if chore_update_params[:type] === "add"
       chore = Chore.find(chore_update_params[:id])
       user = User.find(chore_update_params[:user_id])
-
       # change chore to unavailable
-      chore.update_attributes(available: false)
+      chore.update_attributes(available: false, currently_assigned: user.username)
       # add chore to user_chores
       user.chores << chore
       user.user_chores.last.update_attributes(complete: false, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, claimed_at: Time.now)
