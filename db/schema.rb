@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180102145754) do
+ActiveRecord::Schema.define(version: 20180103213848) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,8 @@ ActiveRecord::Schema.define(version: 20180102145754) do
     t.string "image_url"
     t.boolean "personal_chore", default: false
     t.integer "chore_owner"
+    t.integer "complete_count", default: 0
+    t.string "currently_assigned"
   end
 
   create_table "households", force: :cascade do |t|
@@ -48,6 +50,7 @@ ActiveRecord::Schema.define(version: 20180102145754) do
     t.integer "likes", default: 0
     t.datetime "completed_at"
     t.datetime "claimed_at"
+    t.integer "order_count"
   end
 
   create_table "user_households", force: :cascade do |t|
@@ -67,6 +70,8 @@ ActiveRecord::Schema.define(version: 20180102145754) do
     t.integer "points", default: 0
     t.string "profile_pic", default: "https://i.pinimg.com/736x/3d/d9/b8/3dd9b8d4404859689ec68bffc46f158d--facebook-profile-profile-pictures.jpg"
     t.string "status", default: "Ready to Clean!"
+    t.integer "complete_count", default: 0
+    t.string "currently_assigned"
   end
 
 end

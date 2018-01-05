@@ -37,17 +37,20 @@ class Api::V1::ChoresController < ApplicationController
       time = t.strftime("%m/%d/%y at %I:%M%p")
       user_chore.update_attributes(complete: true, personal_chore: chore.personal_chore, points: chore.point_value, title: chore.title, image_url: chore.image_url, date_completed: time, completed_at: Time.now)
       # change chore to available
-      chore.update_attributes(available: true)
+      chore.update_attributes(available: true, currently_assigned: "")
       # add points to user points
       user.update_attributes(points: user.points += chore.point_value)
     end
 
     if chore_update_params[:type] === "edit"
+      
       user = User.find(chore_update_params[:user_id])
       chore = Chore.find(chore_params[:id])
-      user_chore = UserChore.find(chore_update_params[:id])
+      if UserChore.exists?(chore_update_params[:id])
+        user_chore = UserChore.find(chore_update_params[:id])
+        user_chore.update_attributes(title: chore_update_params[:title], image_url: chore_update_params[:image_url], points: chore_update_params[:point_value])
+      end
       chore.update_attributes(title: chore_params[:title], description: chore_params[:description], image_url: chore_params[:image_url], point_value: chore_params[:point_value])
-      user_chore.update_attributes(title: chore_update_params[:title], image_url: chore_update_params[:image_url], points: chore_update_params[:point_value])
     end
 
     if chore_update_params[:type] === "delete"
